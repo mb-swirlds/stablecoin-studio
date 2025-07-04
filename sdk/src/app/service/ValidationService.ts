@@ -60,7 +60,8 @@ export default class ValidationService extends Service {
 		const holdDetails = await this.queryBus.execute(
 			new GetHoldForQuery(tokenId, sourceId, holdId),
 		);
-		if (holdDetails.payload.amount.toBigNumber().lt(amount.toBigNumber())) {
+		if (holdDetails.payload.amount.isLowerThan(amount)) {
+			// TODO: CHECK IF THIS IS CORRECT
 			throw new InsufficientHoldBalance();
 		}
 	}
