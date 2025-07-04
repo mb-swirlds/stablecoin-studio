@@ -22,8 +22,8 @@ import {
 
 import axios from 'axios'
 import { ADDRESS_ZERO } from './constants'
-import { BigNumber } from 'ethers'
 import FileId from '@hashgraph/sdk/lib/file/FileId'
+import { network as networkName } from 'hardhat'
 
 const SuccessStatus = 22
 
@@ -77,8 +77,7 @@ export function oneMonthLaterInSeconds(): number {
 
 export function getClient(network?: string): Client {
     if (!network) {
-        const hre = require('hardhat')
-        network = hre.network.name
+        network = networkName.name
     }
     switch (network) {
         case 'previewnet':
@@ -243,8 +242,7 @@ interface IKey {
 
 function getHederaNetworkMirrorNodeURL(network?: string): string {
     if (!network) {
-        const hre = require('hardhat')
-        network = hre.network.name
+        network = networkName.name
     }
     switch (network) {
         case 'mainnet':

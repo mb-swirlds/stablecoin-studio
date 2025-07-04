@@ -15,8 +15,7 @@ import {
     SUFIXES,
 } from '@configuration'
 import dotenv from 'dotenv'
-import { Wallet } from 'ethers'
-import { Mnemonic } from 'ethers/lib/utils'
+import { HDNodeWallet, Mnemonic, Wallet } from 'ethers'
 
 // Load the `.env` file
 dotenv.config()
@@ -115,11 +114,7 @@ export default class Configuration {
                     defaultValue: EMPTY_STRING,
                 })
                 if (phrase) {
-                    result[network] = {
-                        phrase,
-                        path: DEFAULT_MNEMONIC_PATH,
-                        locale: DEFAULT_MNEMONIC_LOCALE,
-                    }
+                    result[network] = Mnemonic.fromPhrase(phrase)
                 }
                 return result
             },
@@ -139,7 +134,7 @@ export default class Configuration {
                     const mnemonic = this._mnemonic[network]
                     if (mnemonic?.phrase) {
                         for (let i = 0; i < DEFAULT_MNEMONIC_COUNT; i++) {
-                            const wallet = Wallet.fromMnemonic(mnemonic.phrase, `${mnemonic.path}/${i}`)
+                            const wallet = HDNodeWallet.fromMnemonic(mnemonic, `${DEFAULT_MNEMONIC_PATH}/${i}`)
                             privateKeys.push(wallet.privateKey)
                         }
                     }

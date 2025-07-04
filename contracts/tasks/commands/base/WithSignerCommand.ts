@@ -1,6 +1,5 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { Signer, Wallet } from 'ethers'
-import { keccak256 } from 'ethers/lib/utils'
 
 export interface WithSignerCommandParams {
     hre: HardhatRuntimeEnvironment
@@ -43,7 +42,7 @@ export default class WithSignerCommand {
         } else if (signerAddress) {
             signer =
                 signers.find((signer) => {
-                    return keccak256(signer.address) === keccak256(signerAddress)
+                    return ethers.keccak256(signer.address) === ethers.keccak256(signerAddress)
                 }) ?? signers[0]
         }
 
