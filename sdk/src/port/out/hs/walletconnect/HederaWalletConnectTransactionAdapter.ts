@@ -66,8 +66,16 @@ import HWCSettings from '../../../../domain/context/hwalletconnectsettings/HWCSe
 import { HederaTransactionResponseAdapter } from '../HederaTransactionResponseAdapter';
 import { SigningError } from '../error/SigningError';
 import Hex from '../../../../core/Hex.js';
+import { AppKit, createAppKit } from '@reown/appkit/react';
+import {
+	hederaNamespace,
+	HederaProvider,
+} from '@hashgraph/hedera-wallet-connect';
+import UniversalProvider from '@walletconnect/universal-provider/dist/types/UniversalProvider';
 
 let DAppConnector: typeof import('@hashgraph/hedera-wallet-connect').DAppConnector;
+let HederaAdapter: typeof import('@hashgraph/hedera-wallet-connect').HederaAdapter;
+let HederaChainDefinition: typeof import('@hashgraph/hedera-wallet-connect').HederaChainDefinition;
 let HederaChainId: typeof import('@hashgraph/hedera-wallet-connect').HederaChainId;
 // @ts-ignore
 let SignAndExecuteTransactionParams: typeof import('@hashgraph/hedera-wallet-connect').SignAndExecuteTransactionParams;
@@ -81,7 +89,9 @@ let base64StringToSignatureMap: typeof import('@hashgraph/hedera-wallet-connect'
 if (typeof window !== 'undefined') {
 	const hwc = require('@hashgraph/hedera-wallet-connect');
 	DAppConnector = hwc.DAppConnector;
+	HederaAdapter = hwc.HederaAdapter;
 	HederaChainId = hwc.HederaChainId;
+	HederaChainDefinition = hwc.HederaChainDefinition;
 	SignAndExecuteTransactionParams = hwc.SignAndExecuteTransactionParams;
 	SignTransactionParams = hwc.SignTransactionParams;
 	transactionBodyToBase64String = hwc.transactionBodyToBase64String;
@@ -98,8 +108,10 @@ export class HederaWalletConnectTransactionAdapter extends HederaTransactionAdap
 	public account: Account;
 	public signer: Signer;
 	protected network: Environment;
+	protected appKit: AppKit | undefined = undefined;
 	protected projectId: string;
-	protected dAppConnector: InstanceType<typeof DAppConnector> | undefined;
+	protected dAppConnector: InstanceType<typeof DAppConnector> | undefined =
+		undefined;
 	protected dappMetadata: InstanceType<
 		// @ts-ignore
 		typeof import('@walletconnect/types').SignClientTypes.Metadata
@@ -207,7 +219,45 @@ export class HederaWalletConnectTransactionAdapter extends HederaTransactionAdap
 				LedgerId.fromString(currentNetwork),
 				this.projectId,
 			);
-			await this.dAppConnector.init({ logger: 'debug' });
+
+			const nativeHederaAdapter = new HederaAdapter({
+				projectId: this.projectId,
+				networks: [
+					HederaChainDefinition.Native.Mainnet,
+					HederaChainDefinition.Native.Testnet,
+				],
+				namespace: hederaNamespace,
+			});
+
+			const eip155HederaAdapter = new HederaAdapter({
+				projectId: this.projectId,
+				networks: [
+					HederaChainDefinition.EVM.Mainnet,
+					HederaChainDefinition.EVM.Testnet,
+				],
+				namespace: 'eip155',
+			});
+
+			const universalProvider = (await HederaProvider.init({
+				projectId: this.projectId,
+				metadata: this.dappMetadata,
+			})) as unknown as UniversalProvider;
+
+			this.appKit = createAppKit({
+				adapters: [nativeHederaAdapter, eip155HederaAdapter],
+				//@ts-expect-error expected type error
+				universalProvider,
+				projectId: this.projectId,
+				metadata: this.dappMetadata,
+				networks: [
+					HederaChainDefinition.EVM.Testnet,
+					HederaChainDefinition.EVM.Mainnet,
+					HederaChainDefinition.Native.Testnet,
+					HederaChainDefinition.Native.Mainnet,
+				],
+			});
+
+			// await this.dAppConnector.init({ logger: 'debug' });
 			LogService.logTrace(
 				`✅ HWC Initialized with network: ${currentNetwork} and projectId: ${this.projectId}`,
 			);
@@ -221,7 +271,7 @@ export class HederaWalletConnectTransactionAdapter extends HederaTransactionAdap
 
 		LogService.logTrace('🔗 Pairing with Hedera WalletConnect...');
 		// Scan QR code or use WalletConnect URI to connect
-		await this.dAppConnector.openModal();
+		await this.appKit.open();
 		// Get signers from WalletConnect
 		const walletConnectSigners = this.dAppConnector.signers;
 		if (!walletConnectSigners) {
