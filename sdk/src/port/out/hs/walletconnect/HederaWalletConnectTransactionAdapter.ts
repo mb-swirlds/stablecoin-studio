@@ -67,7 +67,9 @@ import { HederaTransactionResponseAdapter } from '../HederaTransactionResponseAd
 import { SigningError } from '../error/SigningError';
 import Hex from '../../../../core/Hex.js';
 import { AppKit, createAppKit } from '@reown/appkit/react';
+import { hederaTestnet } from '@reown/appkit/networks';
 import {
+	HederaChainDefinition,
 	hederaNamespace,
 	HederaProvider,
 } from '@hashgraph/hedera-wallet-connect';
@@ -75,7 +77,6 @@ import UniversalProvider from '@walletconnect/universal-provider/dist/types/Univ
 
 let DAppConnector: typeof import('@hashgraph/hedera-wallet-connect').DAppConnector;
 let HederaAdapter: typeof import('@hashgraph/hedera-wallet-connect').HederaAdapter;
-let HederaChainDefinition: typeof import('@hashgraph/hedera-wallet-connect').HederaChainDefinition;
 let HederaChainId: typeof import('@hashgraph/hedera-wallet-connect').HederaChainId;
 // @ts-ignore
 let SignAndExecuteTransactionParams: typeof import('@hashgraph/hedera-wallet-connect').SignAndExecuteTransactionParams;
@@ -91,7 +92,6 @@ if (typeof window !== 'undefined') {
 	DAppConnector = hwc.DAppConnector;
 	HederaAdapter = hwc.HederaAdapter;
 	HederaChainId = hwc.HederaChainId;
-	HederaChainDefinition = hwc.HederaChainDefinition;
 	SignAndExecuteTransactionParams = hwc.SignAndExecuteTransactionParams;
 	SignTransactionParams = hwc.SignTransactionParams;
 	transactionBodyToBase64String = hwc.transactionBodyToBase64String;
@@ -241,19 +241,21 @@ export class HederaWalletConnectTransactionAdapter extends HederaTransactionAdap
 			const universalProvider = (await HederaProvider.init({
 				projectId: this.projectId,
 				metadata: this.dappMetadata,
+				logger: 'debug',
 			})) as unknown as UniversalProvider;
 
 			this.appKit = createAppKit({
 				adapters: [nativeHederaAdapter, eip155HederaAdapter],
 				//@ts-expect-error expected type error
 				universalProvider,
+				defaultNetwork: hederaTestnet,
 				projectId: this.projectId,
 				metadata: this.dappMetadata,
 				networks: [
-					HederaChainDefinition.EVM.Testnet,
-					HederaChainDefinition.EVM.Mainnet,
-					HederaChainDefinition.Native.Testnet,
 					HederaChainDefinition.Native.Mainnet,
+					HederaChainDefinition.Native.Testnet,
+					HederaChainDefinition.EVM.Mainnet,
+					HederaChainDefinition.EVM.Testnet,
 				],
 			});
 
