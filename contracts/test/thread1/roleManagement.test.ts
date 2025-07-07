@@ -243,7 +243,7 @@ describe('➡️ Role Management Tests', function () {
     it('Admin Cannot grant CashIn role without allowances', async function () {
         // Granting roles with cash in but without allowances
         const Roles = [ROLES.cashin.hash]
-        const amounts: BigNumber[] = []
+        const amounts: bigint[] = []
 
         const txResponse = await roleManagementFacet.grantRoles(
             Roles,

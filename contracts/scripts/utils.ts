@@ -60,10 +60,10 @@ export async function dissociateToken(tokenId: string, targetId: string, clientO
     await checkTxResponse(txResponse, clientOperator)
 }
 
-export async function transferToken(tokenId: string, targetId: string, amount: BigNumber, clientOperator: Client) {
+export async function transferToken(tokenId: string, targetId: string, amount: bigint, clientOperator: Client) {
     const txResponse = await new TransferTransaction()
-        .addTokenTransfer(tokenId, targetId, amount.toNumber())
-        .addTokenTransfer(tokenId, clientOperator.operatorAccountId!.toString(), -1 * amount.toNumber())
+        .addTokenTransfer(tokenId, targetId, Number(amount))
+        .addTokenTransfer(tokenId, clientOperator.operatorAccountId!.toString(), -1 * Number(amount))
         .execute(clientOperator)
 
     await checkTxResponse(txResponse, clientOperator)
