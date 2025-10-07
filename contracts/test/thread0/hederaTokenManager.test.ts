@@ -8,7 +8,7 @@ import {
     IHederaTokenManager,
     RolesFacet__factory,
     SupplierAdminFacet__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     allTokenKeysToKey,
     AllTokenKeysToKeyCommand,

@@ -1,6 +1,6 @@
 {
     "name": "@hashgraph/stablecoin-npm-contracts",
-    "version": "2.1.2",
+    "version": "2.1.6",
     "description": "",
     "main": "./build/typechain-types/index.js",
     "module": "./build/typechain-types/index.js",
@@ -96,4 +96,3 @@
         "commit-msg": "^0.2.3"
     }
 }
-

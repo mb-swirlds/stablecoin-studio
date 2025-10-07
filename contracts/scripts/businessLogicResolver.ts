@@ -3,7 +3,7 @@ import {
     IBusinessLogicResolver__factory,
     IDiamondCutManager__factory,
     IStaticFunctionSelectors__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     EVENTS,
     GAS_LIMIT,
@@ -108,11 +108,7 @@ export async function registerBusinessLogics({
             }
         })
     )
-    const resolverContract = await ethers.getContractAt(
-        'IBusinessLogicResolver',
-        businessLogicResolverProxyAddress,
-        signer
-    )
+    const resolverContract = IBusinessLogicResolver__factory.connect(businessLogicResolverProxyAddress, signer)
 
     const response = await resolverContract.registerBusinessLogics(businessLogicRegistries, {
         gasLimit: GAS_LIMIT.businessLogicResolver.registerBusinessLogics,

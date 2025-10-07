@@ -16,7 +16,7 @@ import {
     PausableFacet__factory,
     RolesFacet,
     RolesFacet__factory,
-} from '@contracts/index'
+} from '@contracts'
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
 

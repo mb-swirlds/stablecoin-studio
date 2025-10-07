@@ -4,7 +4,6 @@ import {
     CONTRACT_NAMES_WITH_RESOLVER_PROXY,
     DEFAULD_CHAR_INDEX,
     DEFAULT_MNEMONIC_COUNT,
-    DEFAULT_MNEMONIC_LOCALE,
     DEFAULT_MNEMONIC_PATH,
     DEPLOY_TYPES,
     EMPTY_STRING,
@@ -15,7 +14,7 @@ import {
     SUFIXES,
 } from '@configuration'
 import dotenv from 'dotenv'
-import { HDNodeWallet, Mnemonic, Wallet } from 'ethers'
+import { HDNodeWallet, Mnemonic } from 'ethers'
 
 // Load the `.env` file
 dotenv.config()

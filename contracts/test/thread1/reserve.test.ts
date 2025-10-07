@@ -7,7 +7,7 @@ import {
     HederaReserveFacet__factory,
     ReserveFacet,
     ReserveFacet__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     DEFAULT_TOKEN,
     delay,

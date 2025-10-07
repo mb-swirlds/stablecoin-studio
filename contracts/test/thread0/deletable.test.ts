@@ -8,7 +8,7 @@ import {
     DeletableFacet__factory,
     RolesFacet,
     RolesFacet__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     deployFullInfrastructure,
     DeployFullInfrastructureCommand,

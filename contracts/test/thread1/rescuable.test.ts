@@ -7,7 +7,7 @@ import {
     HederaTokenManagerFacet__factory,
     RescuableFacet,
     RescuableFacet__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     delay,
     deployFullInfrastructure,

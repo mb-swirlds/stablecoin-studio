@@ -8,7 +8,7 @@ import {
     RolesFacet__factory,
     SupplierAdminFacet,
     SupplierAdminFacet__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     delay,
     deployFullInfrastructure,
@@ -126,7 +126,7 @@ describe('➡️ Role Management Tests', function () {
             }
         )
         await new ValidateTxResponseCommand({ txResponse }).execute()
-
+        await delay({ time: 1, unit: 'sec' })
         // Check roles and cash in allowances
         for (let accountIndex = 0; accountIndex < randomAccountList.length; accountIndex++) {
             const roles = await rolesFacet.getRoles(randomAccountList[accountIndex], {
@@ -172,7 +172,7 @@ describe('➡️ Role Management Tests', function () {
                 gasLimit: GAS_LIMIT.hederaTokenManager.revokeRoles,
             })
         await expect(new ValidateTxResponseCommand({ txResponse }).execute()).to.be.rejectedWith(Error)
-
+        await delay({ time: 2, unit: 'ms' })
         // Check roles after failed grant
         for (const account of randomAccountList) {
             const hasBurnRole = rolesFacet.hasRole(ROLES.burn.hash, account, {
@@ -215,7 +215,7 @@ describe('➡️ Role Management Tests', function () {
             gasLimit: GAS_LIMIT.hederaTokenManager.revokeRoles,
         })
         await new ValidateTxResponseCommand({ txResponse }).execute()
-
+        await delay({ time: 2, unit: 'ms' })
         // Check roles and cash in allowances
         await delay({ time: 1, unit: 'sec' })
         for (let i = 0; i < randomAccountList.length; i++) {

@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat'
 import { expect } from 'chai'
 import { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers'
-import { BusinessLogicResolver } from '@contracts/index'
+import { BusinessLogicResolver } from '@contracts'
 import { ADDRESS_ZERO, CONFIG_ID, decodeEvent, delay, GAS_LIMIT, ValidateTxResponseCommand } from '@scripts'
 
 describe('➡️ BusinessLogicResolver Tests', () => {
@@ -183,6 +183,7 @@ describe('➡️ BusinessLogicResolver Tests', () => {
             const LATEST_VERSION = 2
             const BUSINESS_LOGICS_TO_REGISTER = BUSINESS_LOGIC_KEYS.slice(0, 3)
             const tx = await businessLogicResolver.registerBusinessLogics(BUSINESS_LOGICS_TO_REGISTER)
+            await delay({ time: 1, unit: 'sec' })
             const event = await decodeEvent(businessLogicResolver, 'BusinessLogicsRegistered', await tx.wait())
             const businessLogicsEventNormalized = event.businessLogics.map((businessLogic) => {
                 return {

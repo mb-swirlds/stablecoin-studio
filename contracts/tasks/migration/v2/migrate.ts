@@ -1,8 +1,7 @@
 import { ethers } from 'ethers'
-import { NetworkName } from '@configuration'
 import { task, types } from 'hardhat/config'
+import { NetworkName } from '@configuration'
 import { TransactionStatus, WithSignerCommand } from '@tasks'
-import { TransactionReceiptError } from '@scripts'
 
 /**
  * npx hardhat migrateStableCoinToV2 --stablecoinconfigurationidkey 0x0000000000000000000000000000000000000000000000000000000000000001 --stablecoinconfigurationidversion 0 --businesslogicresolverproxyaddress 0x000000000000000000000000000000000000002a --stablecoinaddress 0xfbe524f1b2fd32a8021cbf880bab06aa4edc7af7 --stablecoinproxyadminaddress 0xffb5d6f958109a8f22e7480d59f4653935d9b292

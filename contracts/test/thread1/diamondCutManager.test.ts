@@ -17,7 +17,7 @@ import {
     DiamondCutManager__factory,
     IDiamondCutManager,
     IDiamondLoupe,
-} from '@contracts/index'
+} from '@contracts'
 
 describe('➡️ DiamondCutManager Tests', () => {
     const configId = '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -360,7 +360,7 @@ describe('➡️ DiamondCutManager Tests', () => {
 
             // Run cancelBatchConfiguration
             await diamondCutManager.cancelBatchConfiguration(configId)
-            await delay({ time: 1, unit: 'sec' })
+            await delay({ time: 700, unit: 'ms' })
             expect(
                 await diamondCutManager.getFacetsLengthByConfigurationIdAndVersion(configId, DEFAULT_CONFIG_VERSION)
             ).to.equal(0)

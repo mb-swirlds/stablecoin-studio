@@ -1,6 +1,7 @@
 import { Wallet, Signer, BaseContract, TransactionReceipt } from 'ethers'
-import { NetworkName } from '@configuration'
-import { configuration } from 'hardhat.config'
+import { NetworkName, NetworkChainId, NetworkNameByChainId } from '@configuration'
+import { configuration } from '@hardhat-configuration'
+import { TypedContractEvent } from '@contracts/common'
 import {
     CouldNotFindWalletError,
     SignerWithoutProviderError,
@@ -8,9 +9,7 @@ import {
     ValidateTxResponseCommand,
     ValidateTxResponseResult,
 } from '@scripts'
-import { NetworkChainId, NetworkNameByChainId } from 'configuration/Configuration'
 import { TransactionStatus } from '@tasks'
-import { TypedContractEvent } from '@contracts/common'
 
 export async function getFullWalletFromSigner(signer: Signer): Promise<Wallet> {
     if (!signer.provider) {

@@ -1,7 +1,7 @@
 import { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers'
 import { expect } from 'chai'
 import { deployStableCoinInTests } from '@test/shared'
-import { HederaReserveFacet, HederaReserveFacet__factory } from '@contracts/index'
+import { HederaReserveFacet, HederaReserveFacet__factory } from '@contracts'
 import {
     DEFAULT_TOKEN,
     delay,

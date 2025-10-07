@@ -1,4 +1,4 @@
-import { IDiamondCutManager__factory, IStaticFunctionSelectors__factory } from '@contracts/index'
+import { IDiamondCutManager__factory, IStaticFunctionSelectors__factory } from '@contracts'
 import {
     CreateConfigurationsForDeployedContractsCommand,
     CreateConfigurationsForDeployedContractsResult,

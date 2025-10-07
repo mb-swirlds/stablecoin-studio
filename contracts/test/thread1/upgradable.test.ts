@@ -2,7 +2,7 @@
 // import { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers'
 // import { ethers, network } from 'hardhat'
 // import { NetworkName } from '@configuration'
-// import { HederaTokenManager, HederaTokenManager__factory } from '@contracts/index'
+// import { HederaTokenManager, HederaTokenManager__factory } from '@contracts'
 // import { MESSAGES, validateTxResponse, ValidateTxResponseCommand } from '@scripts'
 // import { deployFullInfrastructureInTests, GAS_LIMIT, ONE_TOKEN } from '@test/shared'
 

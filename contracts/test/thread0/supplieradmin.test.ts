@@ -11,7 +11,7 @@ import {
     RolesFacet__factory,
     SupplierAdminFacet,
     SupplierAdminFacet__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     DEFAULT_TOKEN,
     delay,

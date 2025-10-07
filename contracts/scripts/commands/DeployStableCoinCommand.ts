@@ -1,5 +1,5 @@
 import { Signer, Wallet } from 'ethers'
-import { IStableCoinFactory } from '@contracts/index'
+import { IStableCoinFactory } from '@contracts'
 import {
     DEFAULT_TOKEN,
     ADDRESS_ZERO,

@@ -10,7 +10,7 @@ import {
     HoldManagementFacet,
     CashInFacet,
     CashInFacet__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     DEFAULT_TOKEN,
     delay,

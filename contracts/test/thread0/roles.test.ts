@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers'
 import { ethers } from 'hardhat'
-import { RolesFacet, RolesFacet__factory } from '@contracts/index'
+import { RolesFacet, RolesFacet__factory } from '@contracts'
 import {
     delay,
     deployFullInfrastructure,
@@ -11,7 +11,7 @@ import {
     ValidateTxResponseCommand,
 } from '@scripts'
 import { deployStableCoinInTests, GAS_LIMIT } from '@test/shared'
-import { ContractTransaction, ContractTransactionResponse } from 'ethers'
+import { ContractTransactionResponse } from 'ethers'
 
 describe('➡️ Roles Tests', function () {
     // Contracts

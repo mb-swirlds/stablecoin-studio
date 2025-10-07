@@ -20,7 +20,7 @@ import {
     SupplierAdminFacet,
     TokenOwnerFacet,
     WipeableFacet,
-} from '@contracts/index'
+} from '@contracts'
 import { DeployContractResult } from '@scripts'
 
 export interface DeployScsContractListResultParams {

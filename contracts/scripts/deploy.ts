@@ -1,6 +1,6 @@
 import { BaseContract, ContractFactory, Overrides } from 'ethers'
 import { ethers } from 'hardhat'
-import { configuration } from 'hardhat.config'
+import { configuration } from '@hardhat-configuration'
 import {
     BurnableFacet__factory,
     BusinessLogicResolver__factory,
@@ -26,7 +26,7 @@ import {
     WipeableFacet__factory,
     IHRC__factory,
     ResolverProxy__factory,
-} from '@contracts/index'
+} from '@contracts'
 import {
     MESSAGES,
     GAS_LIMIT,

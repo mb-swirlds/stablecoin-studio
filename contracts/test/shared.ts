@@ -9,7 +9,7 @@ import {
     TokenKeysToContractCommand,
 } from '@scripts'
 import { SignerWithAddress } from '@nomicfoundation/hardhat-ethers/signers'
-import { IHederaTokenManager } from '@contracts/index'
+import { IHederaTokenManager } from '@contracts'
 
 export { GAS_LIMIT } from '@scripts'
 

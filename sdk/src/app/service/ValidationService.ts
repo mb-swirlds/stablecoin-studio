@@ -37,133 +37,124 @@ import { GetBurnableAmountQuery } from '../../app/usecase/query/stablecoin/burn/
 import { BurnableAmountExceeded } from '../../app/usecase/command/stablecoin/operations/burn/error/BurnableAmountExceeded';
 
 export default class ValidationService extends Service {
-	constructor(
-		public readonly queryBus: QueryBus = Injectable.resolve<QueryBus>(
-			QueryBus,
-		),
-		public readonly accountService: AccountService = Injectable.resolve<AccountService>(
-			AccountService,
-		),
-		public readonly mirrorNodeAdapter: MirrorNodeAdapter = Injectable.resolve<MirrorNodeAdapter>(
-			MirrorNodeAdapter,
-		),
-	) {
-		super();
-	}
+  constructor(
+    public readonly queryBus: QueryBus = Injectable.resolve<QueryBus>(QueryBus),
+    public readonly accountService: AccountService = Injectable.resolve<AccountService>(
+      AccountService,
+    ),
+    public readonly mirrorNodeAdapter: MirrorNodeAdapter = Injectable.resolve<MirrorNodeAdapter>(
+      MirrorNodeAdapter,
+    ),
+  ) {
+    super();
+  }
 
-	async checkHoldBalance(
-		tokenId: HederaId,
-		sourceId: HederaId,
-		holdId: number,
-		amount: BigDecimal,
-	): Promise<void> {
-		const holdDetails = await this.queryBus.execute(
-			new GetHoldForQuery(tokenId, sourceId, holdId),
-		);
-		if (holdDetails.payload.amount.isLowerThan(amount)) {
-			// TODO: CHECK IF THIS IS CORRECT
-			throw new InsufficientHoldBalance();
-		}
-	}
+  async checkHoldBalance(
+    tokenId: HederaId,
+    sourceId: HederaId,
+    holdId: number,
+    amount: BigDecimal,
+  ): Promise<void> {
+    const holdDetails = await this.queryBus.execute(
+      new GetHoldForQuery(tokenId, sourceId, holdId),
+    );
+    if (holdDetails.payload.amount.isLowerThan(amount)) {
+      throw new InsufficientHoldBalance();
+    }
+  }
 
-	async checkValidHoldId(
-		tokenId: HederaId,
-		sourceId: HederaId,
-		holdId: number,
-	): Promise<void> {
-		const holdIds = await this.queryBus.execute(
-			new GetHoldsIdForQuery(tokenId, sourceId, 0, 100),
-		);
-		if (!holdIds.payload.includes(holdId)) {
-			throw new InvalidHoldId();
-		}
-	}
+  async checkValidHoldId(
+    tokenId: HederaId,
+    sourceId: HederaId,
+    holdId: number,
+  ): Promise<void> {
+    const holdIds = await this.queryBus.execute(
+      new GetHoldsIdForQuery(tokenId, sourceId, 0, 100),
+    );
+    if (!holdIds.payload.includes(holdId)) {
+      throw new InvalidHoldId();
+    }
+  }
 
-	async checkEscrow(
-		tokenId: HederaId,
-		sourceId: HederaId,
-		holdId: number,
-	): Promise<void> {
-		const holdDetails = await this.queryBus.execute(
-			new GetHoldForQuery(tokenId, sourceId, holdId),
-		);
-		const callerAccount = this.accountService.getCurrentAccount();
-		const caller =
-			callerAccount.evmAddress !== undefined
-				? callerAccount.evmAddress.toLowerCase()
-				: (
-						await this.accountService.getAccountInfo(
-							callerAccount.id,
-						)
-				  ).evmAddress
-						?.toString()
-						.toLowerCase();
-		const escrow = holdDetails.payload.escrowAddress.toLowerCase();
-		if (caller != escrow) {
-			throw new NotEscrow(caller ?? EVM_ZERO_ADDRESS, escrow);
-		}
-	}
+  async checkEscrow(
+    tokenId: HederaId,
+    sourceId: HederaId,
+    holdId: number,
+  ): Promise<void> {
+    const holdDetails = await this.queryBus.execute(
+      new GetHoldForQuery(tokenId, sourceId, holdId),
+    );
+    const callerAccount = this.accountService.getCurrentAccount();
+    const caller =
+      callerAccount.evmAddress !== undefined
+        ? callerAccount.evmAddress.toLowerCase()
+        : (
+            await this.accountService.getAccountInfo(callerAccount.id)
+          ).evmAddress
+            ?.toString()
+            .toLowerCase();
+    const escrow = holdDetails.payload.escrowAddress.toLowerCase();
+    if (caller != escrow) {
+      throw new NotEscrow(caller ?? EVM_ZERO_ADDRESS, escrow);
+    }
+  }
 
-	async checkHoldTarget(
-		tokenId: HederaId,
-		sourceId: HederaId,
-		holdId: number,
-		targetId?: HederaId,
-	): Promise<void> {
-		const holdDetails = await this.queryBus.execute(
-			new GetHoldForQuery(tokenId, sourceId, holdId),
-		);
-		const destinationAddress =
-			holdDetails.payload.destinationAddress.toLowerCase();
+  async checkHoldTarget(
+    tokenId: HederaId,
+    sourceId: HederaId,
+    holdId: number,
+    targetId?: HederaId,
+  ): Promise<void> {
+    const holdDetails = await this.queryBus.execute(
+      new GetHoldForQuery(tokenId, sourceId, holdId),
+    );
+    const destinationAddress =
+      holdDetails.payload.destinationAddress.toLowerCase();
 
-		if (destinationAddress === EVM_ZERO_ADDRESS && !targetId) {
-			throw new InvalidHoldDestination();
-		}
+    if (destinationAddress === EVM_ZERO_ADDRESS && !targetId) {
+      throw new InvalidHoldDestination();
+    }
 
-		if (targetId && destinationAddress != EVM_ZERO_ADDRESS) {
-			const targetEvmAddress =
-				await this.mirrorNodeAdapter.accountToEvmAddress(targetId);
+    if (targetId && destinationAddress != EVM_ZERO_ADDRESS) {
+      const targetEvmAddress = await this.mirrorNodeAdapter.accountToEvmAddress(
+        targetId,
+      );
 
-			if (
-				destinationAddress != targetEvmAddress.toString().toLowerCase()
-			) {
-				throw new InvalidHoldDestination();
-			}
-		}
-	}
+      if (destinationAddress != targetEvmAddress.toString().toLowerCase()) {
+        throw new InvalidHoldDestination();
+      }
+    }
+  }
 
-	async checkHoldExpiration(
-		tokenId: HederaId,
-		sourceId: HederaId,
-		holdId: number,
-		isReclaim = false,
-	): Promise<void> {
-		const holdDetails = await this.queryBus.execute(
-			new GetHoldForQuery(tokenId, sourceId, holdId),
-		);
+  async checkHoldExpiration(
+    tokenId: HederaId,
+    sourceId: HederaId,
+    holdId: number,
+    isReclaim = false,
+  ): Promise<void> {
+    const holdDetails = await this.queryBus.execute(
+      new GetHoldForQuery(tokenId, sourceId, holdId),
+    );
 
-		const currentTimestamp = Math.floor(Date.now() / 1000);
-		const { expirationTimeStamp } = holdDetails.payload;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const { expirationTimeStamp } = holdDetails.payload;
 
-		// Check expiration based on reclaim flag
-		if (!isReclaim && expirationTimeStamp < currentTimestamp) {
-			throw new ExpiredHold();
-		}
+    // Check expiration based on reclaim flag
+    if (!isReclaim && expirationTimeStamp < currentTimestamp) {
+      throw new ExpiredHold();
+    }
 
-		if (isReclaim && expirationTimeStamp > currentTimestamp) {
-			throw new HoldNotExpired();
-		}
-	}
+    if (isReclaim && expirationTimeStamp > currentTimestamp) {
+      throw new HoldNotExpired();
+    }
+  }
 
-	async checkBurnableAmount(
-		tokenId: HederaId,
-		amount: string,
-	): Promise<void> {
-		const burnableAmount = (
-			await this.queryBus.execute(new GetBurnableAmountQuery(tokenId))
-		).payload;
-		if (burnableAmount.isLowerThan(BigDecimal.fromString(amount))) {
-			throw new BurnableAmountExceeded();
-		}
-	}
+  async checkBurnableAmount(tokenId: HederaId, amount: string): Promise<void> {
+    const burnableAmount = (
+      await this.queryBus.execute(new GetBurnableAmountQuery(tokenId))
+    ).payload;
+    if (burnableAmount.isLowerThan(BigDecimal.fromString(amount))) {
+      throw new BurnableAmountExceeded();
+    }
+  }
 }

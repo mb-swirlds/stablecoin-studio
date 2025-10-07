@@ -11,7 +11,7 @@ import {
     MESSAGES,
 } from '@scripts'
 import { GAS_LIMIT } from '@test/shared'
-import { HederaReserveFacet__factory, ReserveFacet, ReserveFacet__factory } from '@contracts/index'
+import { HederaReserveFacet__factory, ReserveFacet, ReserveFacet__factory } from '@contracts'
 
 const toReserve = (amount: bigint) => {
     return amount / 10n
@@ -99,7 +99,7 @@ describe('StableCoinFactory Tests', function () {
                 freeze: false,
             },
             allToContract: false,
-            initialAmountDataFeed: DEFAULT_TOKEN.initialSupply + 1n.toString(),
+            initialAmountDataFeed: (DEFAULT_TOKEN.initialSupply + 1n).toString(),
             businessLogicResolverProxyAddress: businessLogicResolver,
             stableCoinFactoryProxyAddress: stableCoinFactoryProxy,
         })
@@ -122,7 +122,7 @@ describe('StableCoinFactory Tests', function () {
             },
             allToContract: false,
             createReserve: false,
-            initialAmountDataFeed: DEFAULT_TOKEN.initialSupply + 1n.toString(),
+            initialAmountDataFeed: (DEFAULT_TOKEN.initialSupply + 1n).toString(),
             businessLogicResolverProxyAddress: businessLogicResolver,
             stableCoinFactoryProxyAddress: stableCoinFactoryProxy,
         })

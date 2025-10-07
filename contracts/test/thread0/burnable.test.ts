@@ -6,7 +6,7 @@ import {
     HederaTokenManagerFacet__factory,
     HederaTokenManagerFacet,
     BurnableFacet,
-} from '@contracts/index'
+} from '@contracts'
 import {
     DEFAULT_TOKEN,
     delay,
